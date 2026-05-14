@@ -742,10 +742,50 @@
   .modal-success p { font-size: 0.88rem; color: var(--muted); }
   .modal-form-wrap.hidden { display: none; }
 
+  /* ── HAMBURGER BUTTON ───────────────────────────────────── */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .nav-hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: rgba(255,255,255,0.85);
+    border-radius: 2px;
+    transition: transform 0.22s, opacity 0.22s;
+  }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
   @media (max-width: 640px) {
-    .nav-links { display: none; }
+    .nav { flex-wrap: wrap; height: auto; min-height: 72px; padding-top: 0; padding-bottom: 0; }
+    .nav-hamburger { display: flex; }
+    .nav-cta { display: none; }
+    .nav-links {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      gap: 0;
+      padding: 4px 0 12px;
+      flex: none;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links li { border-top: 1px solid rgba(255,255,255,0.06); }
+    .nav-links a { display: block; padding: 12px 4px; font-size: 1rem; color: rgba(255,255,255,0.75); }
     .hero-metrics .hm-item { min-width: 100px; padding: 12px; }
     .trust-sep { display: none; }
+    .step-arrow { display: none; }
+    .how-step { border-right: none; border-bottom: 1px solid var(--border-lt); }
+    .how-step:last-child { border-bottom: none; }
   }
 </style>
 </head>
@@ -761,6 +801,9 @@
     <li><a href="contact.html">Contact</a></li>
   </ul>
   <a href="#" class="nav-cta" onclick="openModal();return false;">Request Demo</a>
+  <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" onclick="toggleMobileNav()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- HERO -->
@@ -1102,6 +1145,22 @@
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeModal();
   });
+  function toggleMobileNav() {
+    const links = document.querySelector('.nav-links');
+    const btn   = document.getElementById('nav-hamburger');
+    links.classList.toggle('open');
+    btn.classList.toggle('open');
+    btn.setAttribute('aria-label', links.classList.contains('open') ? 'Close menu' : 'Open menu');
+  }
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.nav-links a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        document.querySelector('.nav-links').classList.remove('open');
+        document.getElementById('nav-hamburger').classList.remove('open');
+      });
+    });
+  });
+
   async function handleSubmit(e) {
     e.preventDefault();
     const form = e.target;
