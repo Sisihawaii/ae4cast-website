@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signals — AE4cast Yield Intelligence & Market Reports</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --orange:    #f97316;
+    --orange-dk: #ea6c0a;
+    --dark:      #0a0f1e;
+    --dark2:     #111827;
+    --dark3:     #1e293b;
+    --slate:     #334155;
+    --muted:     #64748b;
+    --border:    #1e293b;
+    --white:     #ffffff;
+    --offwhite:  #f8fafc;
+    --corn:      #3b82f6;
+    --soy:       #22c55e;
+    --text-dark: #0f172a;
+  }
+
+  body {
+    font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    background: var(--offwhite);
+    color: var(--text-dark);
+    line-height: 1.6;
+    font-size: 16px;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ── NAV ────────────────────────────────────────────────────── */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,15,30,0.97);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 0 clamp(24px, 4vw, 72px);
+    display: flex;
+    align-items: center;
+    height: 72px;
+    gap: 40px;
+  }
+  .nav-logo {
+    font-size: 1.45rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+  .nav-logo span { color: var(--orange); }
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+    flex: 1;
+  }
+  .nav-links a {
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.65);
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a.active { color: var(--white); }
+  .nav-cta {
+    background: var(--orange);
+    color: var(--white);
+    font-size: 0.88rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 7px;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .nav-cta:hover { background: var(--orange-dk); }
+  @media (max-width: 640px) { .nav-links { display: none; } }
+
+  /* ── PAGE HEADER ────────────────────────────────────────────── */
+  .page-header {
+    background:
+      linear-gradient(160deg, rgba(13,20,36,0.55) 0%, rgba(10,15,30,0.42) 40%, rgba(12,21,32,0.55) 100%),
+      url('image/ae4casthomepage1.png') center / cover no-repeat;
+    padding: clamp(48px, 6vw, 80px) clamp(24px, 6vw, 80px) clamp(40px, 5vw, 64px);
+    color: var(--white);
+  }
+  .page-header-inner { max-width: 860px; margin: 0 auto; }
+  .page-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(249,115,22,0.12);
+    border: 1px solid rgba(249,115,22,0.3);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 20px;
+  }
+  .page-header h1 {
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 14px;
+  }
+  .page-header p {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.6);
+    max-width: 520px;
+  }
+
+  /* ── FILTERS ────────────────────────────────────────────────── */
+  .filters {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 28px clamp(24px, 6vw, 80px) 0;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--orange); color: var(--orange); }
+  .filter-btn.active {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: var(--white);
+  }
+
+  /* ── REPORT GRID ────────────────────────────────────────────── */
+  .reports-wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 28px clamp(24px, 6vw, 80px) 64px;
+  }
+  .reports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 20px;
+  }
+  @media (max-width: 480px) { .reports-grid { grid-template-columns: 1fr; } }
+
+  /* ── REPORT CARD ────────────────────────────────────────────── */
+  .report-card {
+    background: var(--white);
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 24px 26px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: box-shadow 0.18s, transform 0.18s;
+    cursor: pointer;
+  }
+  .report-card:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+    transform: translateY(-2px);
+  }
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .card-tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .tag-model    { background: #eff6ff; color: #1d4ed8; }
+  .tag-market   { background: #fff7ed; color: #c2410c; }
+  .tag-outlook  { background: #f0fdf4; color: #15803d; }
+  .tag-special  { background: #fdf4ff; color: #7e22ce; }
+
+  .card-date {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1.3;
+  }
+  .card-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.5;
+    flex: 1;
+  }
+  .card-crops {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .crop-pill {
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 10px;
+  }
+  .pill-corn { background: #dbeafe; color: #1d4ed8; }
+  .pill-soy  { background: #dcfce7; color: #166534; }
+  .card-link {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--orange);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    transition: gap 0.15s;
+  }
+  .report-card:hover .card-link { gap: 8px; }
+
+  /* ── EMPTY STATE ────────────────────────────────────────────── */
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 48px 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  /* ── SUBSCRIBE BAR ──────────────────────────────────────────── */
+  .subscribe-bar {
+    background: var(--dark);
+    padding: clamp(32px, 4vw, 48px) clamp(24px, 6vw, 80px);
+    text-align: center;
+    color: var(--white);
+  }
+  .subscribe-bar h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .subscribe-bar p {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 20px;
+  }
+  .subscribe-bar a {
+    background: var(--orange);
+    color: var(--white);
+    font-size: 0.88rem;
+    font-weight: 700;
+    padding: 11px 26px;
+    border-radius: 7px;
+    display: inline-block;
+    transition: background 0.15s;
+  }
+  .subscribe-bar a:hover { background: var(--orange-dk); }
+
+  /* ── FOOTER ─────────────────────────────────────────────────── */
+  .footer {
+    background: var(--dark2);
+    border-top: 1px solid var(--border);
+    padding: 20px clamp(24px, 6vw, 80px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-logo { font-size: 1rem; font-weight: 900; color: var(--white); letter-spacing: -0.02em; }
+  .footer-logo span { color: var(--orange); }
+  .footer-links { display: flex; gap: 20px; list-style: none; flex-wrap: wrap; }
+  .footer-links a { font-size: 0.78rem; color: rgba(255,255,255,0.35); transition: color 0.15s; }
+  .footer-links a:hover { color: rgba(255,255,255,0.7); }
+  .footer-copy { font-size: 0.75rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">AE4<span>cast</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="blog.html">Blog</a></li>
+    <li><a href="signals.html" class="active">Signals</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="index.html" class="nav-cta" onclick="openModal && openModal();return false;">Request Demo</a>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <span class="page-eyebrow">AE4cast · Signals</span>
+    <h1>Yield Intelligence &amp;<br>Market Reports</h1>
+    <p>Model performance analysis, in-season outlooks, and weekly yield signals for corn and soybeans — updated throughout the season.</p>
+  </div>
+</div>
+
+<!-- FILTERS -->
+<div class="filters">
+  <button class="filter-btn active" onclick="filterReports('all', this)">All</button>
+  <button class="filter-btn" onclick="filterReports('model', this)">Model Performance</button>
+  <button class="filter-btn" onclick="filterReports('market', this)">Market Update</button>
+  <button class="filter-btn" onclick="filterReports('outlook', this)">Seasonal Outlook</button>
+</div>
+
+<!-- REPORTS GRID -->
+<div class="reports-wrap">
+  <div class="reports-grid" id="reports-grid">
+
+    <!-- ── ADD NEW REPORTS AT THE TOP ─────────────────────────────
+         Copy a report-card block, update the data-category, date,
+         title, description, crop pills, and href, then save.
+         Categories: model | market | outlook | special
+    ──────────────────────────────────────────────────────────── -->
+
+    <!-- MODEL PERFORMANCE REPORT -->
+    <a href="performance.html" class="report-card" data-category="model">
+      <div class="card-top">
+        <span class="card-tag tag-model">Model Performance</span>
+        <span class="card-date">May 2026</span>
+      </div>
+      <div class="card-title">AE4cast Backtest Results — 26-Year Validation vs. USDA</div>
+      <div class="card-desc">Same-day accuracy vs. USDA August WASDE across 2000–2025. Corn MAE 3.13 bu/ac (+25% vs USDA), Soy MAE 1.50 bu/ac (+21% vs USDA). Period breakdown and methodology included.</div>
+      <div class="card-crops">
+        <span class="crop-pill pill-corn">Corn</span>
+        <span class="crop-pill pill-soy">Soybeans</span>
+      </div>
+      <span class="card-link">Read report →</span>
+    </a>
+
+    <!-- PLACEHOLDER — remove once first market update is published -->
+    <div class="report-card" data-category="market" style="opacity:0.45;cursor:default;pointer-events:none;">
+      <div class="card-top">
+        <span class="card-tag tag-market">Market Update</span>
+        <span class="card-date">Coming soon</span>
+      </div>
+      <div class="card-title">Weekly Corn &amp; Soy Yield Outlook</div>
+      <div class="card-desc">In-season daily yield forecasts with USDA comparison and key weather drivers. Published twice weekly during the growing season.</div>
+      <div class="card-crops">
+        <span class="crop-pill pill-corn">Corn</span>
+        <span class="crop-pill pill-soy">Soybeans</span>
+      </div>
+      <span class="card-link" style="color:#94a3b8">Starting May 2026</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- SUBSCRIBE BAR -->
+<div class="subscribe-bar">
+  <h3>Get Signals in Your Inbox</h3>
+  <p>New market updates and yield reports delivered twice a week during the growing season.</p>
+  <a href="mailto:info@ae4cast.com?subject=Subscribe to AE4cast Signals">Subscribe via Email</a>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <span class="footer-logo">AE4<span>cast</span></span>
+  <ul class="footer-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="blog.html">Blog</a></li>
+    <li><a href="signals.html">Signals</a></li>
+    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+    <li><a href="terms.html">Terms of Service</a></li>
+  </ul>
+  <span class="footer-copy">© 2026 AE4cast. All rights reserved.</span>
+</footer>
+
+<script>
+function filterReports(category, btn) {
+  // Update active button
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // Show/hide cards
+  document.querySelectorAll('.report-card').forEach(card => {
+    const match = category === 'all' || card.dataset.category === category;
+    card.style.display = match ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>

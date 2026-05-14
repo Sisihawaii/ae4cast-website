@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — AE4cast</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --orange:    #f97316;
+    --orange-dk: #ea6c0a;
+    --dark:      #0a0f1e;
+    --dark2:     #111827;
+    --dark3:     #1e293b;
+    --slate:     #334155;
+    --muted:     #64748b;
+    --border:    #1e293b;
+    --border-lt: #e2e8f0;
+    --white:     #ffffff;
+    --offwhite:  #f8fafc;
+    --text-dark: #0f172a;
+  }
+
+  body {
+    font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    background: var(--offwhite);
+    color: var(--text-dark);
+    line-height: 1.6;
+    font-size: 16px;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ── NAV ────────────────────────────────────────────────────── */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,15,30,0.97);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 0 clamp(24px, 4vw, 72px);
+    display: flex;
+    align-items: center;
+    height: 72px;
+    gap: 40px;
+  }
+  .nav-logo {
+    font-size: 1.45rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+  .nav-logo span { color: var(--orange); }
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+    flex: 1;
+  }
+  .nav-links a {
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.65);
+    transition: color 0.15s;
+    letter-spacing: 0.01em;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a.active { color: var(--white); }
+  .nav-cta {
+    background: var(--orange);
+    color: var(--white);
+    font-size: 0.88rem;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 7px;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .nav-cta:hover { background: var(--orange-dk); }
+  @media (max-width: 640px) { .nav-links { display: none; } }
+
+  /* ── PAGE HEADER ────────────────────────────────────────────── */
+  .page-header {
+    background:
+      linear-gradient(160deg, rgba(13,20,36,0.55) 0%, rgba(10,15,30,0.42) 40%, rgba(12,21,32,0.55) 100%),
+      url('image/ae4casthomepage1.png') center / cover no-repeat;
+    padding: clamp(48px, 6vw, 80px) clamp(24px, 6vw, 80px) clamp(40px, 5vw, 64px);
+    color: var(--white);
+  }
+  .page-header-inner { max-width: 780px; margin: 0 auto; }
+  .page-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(249,115,22,0.12);
+    border: 1px solid rgba(249,115,22,0.3);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 20px;
+  }
+  .page-header h1 {
+    font-size: clamp(2rem, 4.5vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 14px;
+  }
+  .page-header p {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.6);
+    max-width: 480px;
+  }
+
+  /* ── MAIN LAYOUT ────────────────────────────────────────────── */
+  .contact-wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 48px clamp(24px, 6vw, 80px) 80px;
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 48px;
+    align-items: start;
+  }
+  @media (max-width: 640px) {
+    .contact-wrap { grid-template-columns: 1fr; gap: 36px; }
+  }
+
+  /* ── CONTACT INFO PANEL ─────────────────────────────────────── */
+  .contact-info h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--text-dark);
+  }
+  .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-bottom: 24px;
+  }
+  .info-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .info-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+  .info-value a {
+    color: var(--orange);
+    transition: opacity 0.15s;
+  }
+  .info-value a:hover { opacity: 0.75; }
+  .info-note {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border-lt);
+    margin: 28px 0;
+  }
+  .use-cases {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .use-cases li {
+    font-size: 0.83rem;
+    color: var(--muted);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.45;
+  }
+  .use-cases li::before {
+    content: "→";
+    color: var(--orange);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── FORM PANEL ─────────────────────────────────────────────── */
+  .contact-form-wrap {
+    background: var(--white);
+    border: 1px solid var(--border-lt);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .contact-form-wrap h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: var(--text-dark);
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .form-group label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--slate);
+    letter-spacing: 0.02em;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-family: inherit;
+    font-size: 0.88rem;
+    color: var(--text-dark);
+    background: var(--offwhite);
+    border: 1px solid var(--border-lt);
+    border-radius: 8px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    width: 100%;
+    -webkit-appearance: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
+  }
+  .form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.55;
+  }
+  .form-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+  .form-submit {
+    width: 100%;
+    background: var(--orange);
+    color: var(--white);
+    font-family: inherit;
+    font-size: 0.92rem;
+    font-weight: 700;
+    padding: 13px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-top: 6px;
+    letter-spacing: 0.01em;
+  }
+  .form-submit:hover { background: var(--orange-dk); }
+  .form-submit:disabled { opacity: 0.55; cursor: not-allowed; }
+
+  /* ── SUCCESS / ERROR STATES ─────────────────────────────────── */
+  .form-message {
+    display: none;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-top: 14px;
+    line-height: 1.5;
+  }
+  .form-message.success {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #15803d;
+  }
+  .form-message.error {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    color: #c2410c;
+  }
+
+  /* ── FOOTER ─────────────────────────────────────────────────── */
+  .footer {
+    background: var(--dark2);
+    border-top: 1px solid var(--border);
+    padding: 20px clamp(24px, 6vw, 80px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-logo { font-size: 1rem; font-weight: 900; color: var(--white); letter-spacing: -0.02em; }
+  .footer-logo span { color: var(--orange); }
+  .footer-links { display: flex; gap: 20px; list-style: none; flex-wrap: wrap; }
+  .footer-links a { font-size: 0.78rem; color: rgba(255,255,255,0.35); transition: color 0.15s; }
+  .footer-links a:hover { color: rgba(255,255,255,0.7); }
+  .footer-copy { font-size: 0.75rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">AE4<span>cast</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="blog.html">Blog</a></li>
+    <li><a href="signals.html">Signals</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+  </ul>
+  <a href="contact.html" class="nav-cta">Request Demo</a>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <span class="page-eyebrow">AE4cast · Contact</span>
+    <h1>Get in Touch</h1>
+    <p>Questions about our forecasts, API access, or custom data — we'd love to hear from you.</p>
+  </div>
+</div>
+
+<!-- CONTACT LAYOUT -->
+<div class="contact-wrap">
+
+  <!-- LEFT: Info -->
+  <div class="contact-info">
+    <h2>Contact Details</h2>
+
+    <div class="info-item">
+      <span class="info-label">Email</span>
+      <span class="info-value"><a href="mailto:info@ae4cast.com">info@ae4cast.com</a></span>
+    </div>
+
+    <div class="info-item">
+      <span class="info-label">Response time</span>
+      <span class="info-value">Within 1–2 business days</span>
+    </div>
+
+    <p class="info-note">We're a small team focused on model quality and client outcomes. Every inquiry is read personally.</p>
+
+    <hr class="divider">
+
+    <p style="font-size:0.78rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">Common inquiries</p>
+    <ul class="use-cases">
+      <li>API access for live daily forecasts</li>
+      <li>Custom state- or county-level yield outlooks</li>
+      <li>Grain trading and risk management use cases</li>
+      <li>Agribusiness and procurement planning</li>
+      <li>Data licensing and white-label options</li>
+      <li>Demo request or methodology questions</li>
+    </ul>
+  </div>
+
+  <!-- RIGHT: Form -->
+  <div class="contact-form-wrap">
+    <h2>Send a Message</h2>
+    <!-- Replace YOUR_FORM_ID below with your Formspree form ID.
+         Sign up free at https://formspree.io — create a form, copy the ID.
+         Example: action="https://formspree.io/f/abcdefgh" -->
+    <form id="contact-form" name="contact" method="POST" data-netlify="true" novalidate>
+      <input type="hidden" name="form-name" value="contact">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="first-name">First name</label>
+          <input type="text" id="first-name" name="first_name" placeholder="Jane" required>
+        </div>
+        <div class="form-group">
+          <label for="last-name">Last name</label>
+          <input type="text" id="last-name" name="last_name" placeholder="Smith" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Work email</label>
+        <input type="email" id="email" name="email" placeholder="jane@yourfirm.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="company">Company / Organisation</label>
+        <input type="text" id="company" name="company" placeholder="Optional">
+      </div>
+
+      <div class="form-group">
+        <label for="inquiry">Inquiry type</label>
+        <select id="inquiry" name="inquiry_type">
+          <option value="">Select a topic…</option>
+          <option value="api">API access</option>
+          <option value="demo">Request a demo</option>
+          <option value="trading">Grain trading / risk management</option>
+          <option value="agribusiness">Agribusiness / procurement</option>
+          <option value="data">Data licensing</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" placeholder="Tell us what you're working on or what you'd like to know…" required></textarea>
+      </div>
+
+      <button type="submit" class="form-submit" id="submit-btn">Send Message</button>
+
+      <div class="form-message success" id="msg-success">
+        Thanks — we've received your message and will reply within 1–2 business days.
+      </div>
+      <div class="form-message error" id="msg-error">
+        Something went wrong. Please try again or email us directly at <a href="mailto:info@ae4cast.com" style="color:var(--orange)">info@ae4cast.com</a>.
+      </div>
+    </form>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <span class="footer-logo">AE4<span>cast</span></span>
+  <ul class="footer-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="blog.html">Blog</a></li>
+    <li><a href="signals.html">Signals</a></li>
+    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+    <li><a href="terms.html">Terms of Service</a></li>
+  </ul>
+  <span class="footer-copy">© 2026 AE4cast. All rights reserved.</span>
+</footer>
+
+<script>
+const form = document.getElementById('contact-form');
+const btn  = document.getElementById('submit-btn');
+const msgOk  = document.getElementById('msg-success');
+const msgErr = document.getElementById('msg-error');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  msgOk.style.display = 'none';
+  msgErr.style.display = 'none';
+
+  try {
+    const res = await fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(new FormData(form)).toString()
+    });
+    if (res.ok) {
+      form.reset();
+      msgOk.style.display = 'block';
+      btn.textContent = 'Message Sent';
+    } else {
+      throw new Error('non-ok');
+    }
+  } catch {
+    msgErr.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Send Message';
+  }
+});
+</script>
+</body>
+</html>
