@@ -781,7 +781,10 @@
     .nav-links.open { display: flex; }
     .nav-links li { border-top: 1px solid rgba(255,255,255,0.06); }
     .nav-links a { display: block; padding: 12px 4px; font-size: 1rem; color: rgba(255,255,255,0.75); }
-    .hero-metrics .hm-item { min-width: 100px; padding: 12px; }
+    .hero-metrics { display: grid; grid-template-columns: 1fr 1fr; }
+    .hero-metrics .hm-item { min-width: 0; padding: 14px 16px; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hero-metrics .hm-item:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.08); }
+    .hero-metrics .hm-item:nth-last-child(-n+2) { border-bottom: none; }
     .trust-sep { display: none; }
     .step-arrow { display: none; }
     .how-step { border-right: none; border-bottom: 1px solid var(--border-lt); }
