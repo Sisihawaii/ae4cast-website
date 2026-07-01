@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>June 2026 Market Insight | July Outlook — AE4cast</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --orange:    #f97316;
+    --orange-dk: #ea6c0a;
+    --dark:      #0a0f1e;
+    --dark2:     #111827;
+    --dark3:     #1e293b;
+    --slate:     #334155;
+    --muted:     #64748b;
+    --border:    #e2e8f0;
+    --white:     #ffffff;
+    --offwhite:  #f8fafc;
+    --corn:      #3b82f6;
+    --soy:       #22c55e;
+    --text-dark: #0f172a;
+    --text-body: #1e293b;
+  }
+
+  body {
+    font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    background: var(--offwhite);
+    color: var(--text-body);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ── NAV ────────────────────────────────────────────────────── */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,15,30,0.97);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 0 clamp(24px, 4vw, 72px);
+    display: flex; align-items: center; height: 72px; gap: 40px;
+  }
+  .nav-logo { font-size: 1.45rem; font-weight: 900; letter-spacing: -0.03em; color: #fff; flex-shrink: 0; }
+  .nav-logo span { color: var(--orange); }
+  .nav-links { display: flex; gap: 36px; list-style: none; flex: 1; }
+  .nav-links a { font-size: 0.92rem; font-weight: 500; color: rgba(255,255,255,0.65); transition: color 0.15s; }
+  .nav-links a:hover { color: #fff; }
+  .nav-links a.active { color: #fff; }
+  .nav-cta {
+    background: var(--orange); color: #fff; font-size: 0.88rem; font-weight: 700;
+    padding: 10px 22px; border-radius: 7px; transition: background 0.15s; flex-shrink: 0;
+  }
+  .nav-cta:hover { background: var(--orange-dk); }
+  .nav-hamburger {
+    display: none; flex-direction: column; gap: 5px; background: none; border: none;
+    cursor: pointer; padding: 6px; margin-left: auto; flex-shrink: 0;
+  }
+  .nav-hamburger span { display: block; width: 22px; height: 2px; background: rgba(255,255,255,0.85); border-radius: 2px; transition: transform 0.22s, opacity 0.22s; }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  @media (max-width: 640px) {
+    .nav { flex-wrap: wrap; height: auto; min-height: 72px; }
+    .nav-hamburger { display: flex; }
+    .nav-cta { display: none; }
+    .nav-links { display: none; width: 100%; flex-direction: column; gap: 0; padding: 4px 0 12px; flex: none; }
+    .nav-links.open { display: flex; }
+    .nav-links li { border-top: 1px solid rgba(255,255,255,0.06); }
+    .nav-links a { display: block; padding: 12px 4px; font-size: 1rem; color: rgba(255,255,255,0.75); }
+  }
+
+  /* ── HERO ───────────────────────────────────────────────────── */
+  .report-hero {
+    background: linear-gradient(160deg, rgba(10,15,30,0.92) 0%, rgba(13,20,42,0.85) 60%, rgba(10,15,30,0.92) 100%),
+                url('image/ae4casthomepage1.png') center / cover no-repeat;
+    padding: clamp(48px, 7vw, 90px) clamp(24px, 6vw, 80px) clamp(40px, 5vw, 64px);
+    color: #fff;
+  }
+  .hero-inner { max-width: 780px; margin: 0 auto; }
+  .hero-meta {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 22px;
+  }
+  .hero-tag {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 20px; background: rgba(249,115,22,0.15);
+    border: 1px solid rgba(249,115,22,0.35); color: var(--orange);
+  }
+  .hero-tag-outlook {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 20px; background: rgba(34,197,94,0.12);
+    border: 1px solid rgba(34,197,94,0.3); color: #4ade80;
+  }
+  .hero-date { font-size: 0.8rem; color: rgba(255,255,255,0.45); font-weight: 500; }
+  .hero-inner h1 {
+    font-size: clamp(1.9rem, 4vw, 2.9rem); font-weight: 800; letter-spacing: -0.03em;
+    line-height: 1.1; margin-bottom: 16px;
+  }
+  .hero-inner h1 span { color: var(--orange); }
+  .hero-subtitle { font-size: 1rem; color: rgba(255,255,255,0.58); max-width: 560px; line-height: 1.6; margin-bottom: 32px; }
+  .hero-crops { display: flex; gap: 8px; flex-wrap: wrap; }
+  .hero-pill {
+    font-size: 0.72rem; font-weight: 600; padding: 4px 12px; border-radius: 20px;
+  }
+  .pill-corn { background: rgba(59,130,246,0.18); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); }
+  .pill-soy  { background: rgba(34,197,94,0.14);  color: #86efac; border: 1px solid rgba(34,197,94,0.25); }
+
+  /* ── KEY FIGURES BAR ───────────────────────────────────────── */
+  .key-figures {
+    background: var(--dark2);
+    border-bottom: 1px solid var(--dark3);
+  }
+  .key-figures-inner {
+    max-width: 780px; margin: 0 auto;
+    padding: 28px clamp(24px, 6vw, 80px);
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: var(--dark3);
+  }
+  .kf-item {
+    background: var(--dark2); padding: 20px 24px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .kf-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+  .kf-value { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.03em; color: var(--orange); line-height: 1; }
+  .kf-desc  { font-size: 0.78rem; color: rgba(255,255,255,0.5); line-height: 1.4; margin-top: 2px; }
+  @media (max-width: 640px) {
+    .key-figures-inner { grid-template-columns: 1fr; }
+  }
+
+  /* ── ARTICLE LAYOUT ─────────────────────────────────────────── */
+  .article-wrap {
+    max-width: 780px; margin: 0 auto;
+    padding: 52px clamp(24px, 6vw, 80px) 72px;
+  }
+
+  /* ── SECTION ────────────────────────────────────────────────── */
+  .section { margin-bottom: 52px; }
+  .section-label {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--orange); margin-bottom: 6px;
+  }
+  .section h2 {
+    font-size: 1.35rem; font-weight: 800; color: var(--text-dark);
+    letter-spacing: -0.02em; margin-bottom: 16px; line-height: 1.25;
+  }
+  .section p { font-size: 0.95rem; color: #374151; line-height: 1.75; margin-bottom: 14px; }
+  .section p:last-child { margin-bottom: 0; }
+
+  /* ── CHART BLOCK ────────────────────────────────────────────── */
+  .chart-block {
+    margin: 28px 0 8px;
+    border-radius: 12px; overflow: hidden;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  }
+  .chart-block img { width: 100%; display: block; }
+  .chart-caption {
+    font-size: 0.73rem; color: var(--muted); text-align: center;
+    padding: 10px 16px; background: #f8fafc; border-top: 1px solid #e2e8f0;
+    font-style: italic;
+  }
+
+  /* ── CALLOUT ────────────────────────────────────────────────── */
+  .callout {
+    background: #fff7ed; border-left: 4px solid var(--orange);
+    border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 22px 0;
+  }
+  .callout .kf-label { color: var(--orange); margin-bottom: 6px; }
+  .callout p { font-size: 0.88rem; color: #7c2d12; line-height: 1.6; margin-bottom: 0; }
+  .callout strong { color: #9a3412; }
+
+  /* ── DIVIDER ────────────────────────────────────────────────── */
+  .divider {
+    border: none; border-top: 1px solid var(--border); margin: 48px 0 0;
+  }
+
+  /* ── OUTLOOK SECTION ────────────────────────────────────────── */
+  .outlook-header {
+    background: linear-gradient(135deg, var(--dark) 0%, #0d1a2e 100%);
+    border-radius: 14px; padding: 28px 32px; margin-bottom: 28px; color: #fff;
+  }
+  .outlook-header .section-label { color: #4ade80; }
+  .outlook-header h2 { color: #fff; margin-bottom: 8px; }
+  .outlook-header p  { color: rgba(255,255,255,0.55); font-size: 0.88rem; margin-bottom: 0; }
+
+  .watch-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px;
+    margin-top: 20px;
+  }
+  .watch-card {
+    background: var(--white); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .watch-card .icon { font-size: 1.4rem; margin-bottom: 8px; }
+  .watch-card h4 { font-size: 0.82rem; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; }
+  .watch-card p  { font-size: 0.78rem; color: var(--muted); line-height: 1.55; margin: 0; }
+
+  /* ── CALENDAR TABLE ─────────────────────────────────────────── */
+  .cal-table { width: 100%; border-collapse: collapse; margin-top: 18px; font-size: 0.85rem; }
+  .cal-table th {
+    text-align: left; padding: 10px 14px; background: var(--dark); color: rgba(255,255,255,0.55);
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+  }
+  .cal-table th:first-child { border-radius: 8px 0 0 0; }
+  .cal-table th:last-child  { border-radius: 0 8px 0 0; }
+  .cal-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); color: #374151; vertical-align: top; }
+  .cal-table tr:last-child td { border-bottom: none; }
+  .cal-table tr:hover td { background: #fafafa; }
+  .cal-date { font-weight: 700; color: var(--text-dark); white-space: nowrap; }
+  .cal-badge {
+    display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 2px 8px; border-radius: 10px; margin-bottom: 3px;
+  }
+  .badge-usda    { background: #eff6ff; color: #1d4ed8; }
+  .badge-market  { background: #fff7ed; color: #c2410c; }
+  .badge-weekly  { background: #f0fdf4; color: #15803d; }
+
+  /* ── CTA BLOCK ──────────────────────────────────────────────── */
+  .cta-block {
+    background: var(--dark); border-radius: 14px; padding: 36px 32px;
+    text-align: center; color: #fff; margin-top: 48px;
+  }
+  .cta-block h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 8px; }
+  .cta-block p  { font-size: 0.88rem; color: rgba(255,255,255,0.5); margin-bottom: 22px; }
+  .cta-block a {
+    display: inline-block; background: var(--orange); color: #fff;
+    font-size: 0.88rem; font-weight: 700; padding: 12px 28px;
+    border-radius: 8px; transition: background 0.15s;
+  }
+  .cta-block a:hover { background: var(--orange-dk); }
+
+  /* ── BREADCRUMB ─────────────────────────────────────────────── */
+  .breadcrumb {
+    max-width: 780px; margin: 0 auto;
+    padding: 18px clamp(24px, 6vw, 80px) 0;
+    font-size: 0.78rem; color: var(--muted);
+    display: flex; gap: 6px; align-items: center;
+  }
+  .breadcrumb a { color: var(--orange); }
+  .breadcrumb a:hover { text-decoration: underline; }
+
+  /* ── FOOTER ─────────────────────────────────────────────────── */
+  .footer {
+    background: var(--dark2); border-top: 1px solid var(--dark3);
+    padding: 20px clamp(24px, 6vw, 80px);
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  .footer-logo { font-size: 1rem; font-weight: 900; color: #fff; letter-spacing: -0.02em; }
+  .footer-logo span { color: var(--orange); }
+  .footer-links { display: flex; gap: 20px; list-style: none; flex-wrap: wrap; }
+  .footer-links a { font-size: 0.78rem; color: rgba(255,255,255,0.35); transition: color 0.15s; }
+  .footer-links a:hover { color: rgba(255,255,255,0.7); }
+  .footer-copy { font-size: 0.75rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">AE4<span>cast</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="blog.html">Blog</a></li>
+    <li><a href="signals.html" class="active">Signals</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="contact.html" class="nav-cta">Request Demo</a>
+  <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" onclick="toggleMobileNav()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a href="signals.html">← Signals</a>
+  <span>/</span>
+  <span>June 2026 Market Insight</span>
+</div>
+
+<!-- HERO -->
+<div class="report-hero">
+  <div class="hero-inner">
+    <div class="hero-meta">
+      <span class="hero-tag">Market Update</span>
+      <span class="hero-tag-outlook">July Outlook</span>
+      <span class="hero-date">June 30, 2026</span>
+    </div>
+    <h1>June 2026 Market Insight<br><span>| July Outlook</span></h1>
+    <p class="hero-subtitle">US Corn &amp; Soybean Update — crops planted, conditions deteriorating, and a critical pollination window opening. What happened in June and what to watch in July.</p>
+    <div class="hero-crops">
+      <span class="hero-pill pill-corn">Corn</span>
+      <span class="hero-pill pill-soy">Soybeans</span>
+    </div>
+  </div>
+</div>
+
+<!-- KEY FIGURES -->
+<div class="key-figures">
+  <div class="key-figures-inner">
+    <div class="kf-item">
+      <span class="kf-label">Precip Deficit</span>
+      <span class="kf-value">−47.8%</span>
+      <span class="kf-desc">Corn Belt cumulative vs 5-yr avg through June 29</span>
+    </div>
+    <div class="kf-item">
+      <span class="kf-label">Corn G+E (Jun 28)</span>
+      <span class="kf-value">67%</span>
+      <span class="kf-desc">Down 6–7 pts vs 73–74% at same point in 2025</span>
+    </div>
+    <div class="kf-item">
+      <span class="kf-label">Export Pace YoY</span>
+      <span class="kf-value">+24% / −19%</span>
+      <span class="kf-desc">Corn ahead · Soybeans behind vs prior year</span>
+    </div>
+  </div>
+</div>
+
+<!-- ARTICLE -->
+<div class="article-wrap">
+
+  <!-- ── JUNE IN REVIEW ────────────────────────────────────────── -->
+  <div class="section">
+    <span class="section-label">June in Review</span>
+    <h2>Crop Conditions</h2>
+    <p>The 2026 corn and soybean crops entered June in solid shape. Corn Good+Excellent (G+E) ratings held in the 67–68% range through mid-month, while soybeans tracked 65–66%. But the final week of June brought the first meaningful deterioration: corn P+VP climbed to 8% (from 5–6% earlier in the month), and the 6–7 point G+E gap versus year-ago (73–74% in 2025) widened as the season progressed. Soybeans dipped to 65% by week ending June 28, slipping below year-ago levels for the first time this season.</p>
+    <p>Planting wrapped up efficiently. Corn reached 97% planted and emerged — well ahead of pace at this point last year. Soybeans reached 95%+ planted with 96% emerged. By late June, corn silking had reached 9% nationally. Pollination is now underway.</p>
+
+    <div class="callout">
+      <div class="kf-label">📌 Key Figure 1: Crop Conditions Entering Pollination</div>
+      <p><strong>Corn G+E: 67% (week ending June 28) — down 6–7 points from 73–74% at the same point in 2025.</strong> G+E ratings that slip below 65% during pollination are historically associated with meaningful national yield loss — and have triggered sharp price rallies in futures markets.</p>
+    </div>
+
+    <div class="chart-block">
+      <img src="image/june_2026_chart_condition.png" alt="2026 Crop Condition G+E trend — Corn and Soybeans, April through June, vs 2025 and 5-year average">
+      <div class="chart-caption">Corn &amp; Soybean G+E weekly trend (Apr–Jun 2026) vs 2025 and 5-year average · Source: USDA NASS Crop Progress · AE4cast</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ── WEATHER ─────────────────────────────────────────────── -->
+  <div class="section" style="margin-top:48px;">
+    <span class="section-label">June in Review</span>
+    <h2>Weather: The Season's Defining Story</h2>
+    <p>June's weather was the most significant market variable of the season so far. Cumulative growing-season heat units (measured from April 1) finished June at <strong>+118% above the 5-year average</strong>, while precipitation came in at <strong>−47.8% below normal</strong> across the Corn Belt.</p>
+    <p>This is not a passing dry spell. It represents a sustained heat-and-dryness combination that has built steadily over two months — arriving precisely as the corn crop enters its most critical growth window. Heat and moisture stress during pollination is the most bullish price catalyst in the corn market: it directly threatens kernel set and national yield, driving the supply-side shock that sends futures higher.</p>
+
+    <div class="callout">
+      <div class="kf-label">📌 Key Figure 2: Precipitation Deficit</div>
+      <p><strong>−47.8% — Corn Belt cumulative precipitation vs. the 5-year average through June 29.</strong> Combined with a heat unit surplus of more than double the seasonal norm, the moisture deficit is the single most important variable heading into July.</p>
+    </div>
+
+    <div class="chart-block">
+      <img src="image/june_2026_chart_weather.png" alt="June 2026 weather anomaly maps — heat units and precipitation deviation by state">
+      <div class="chart-caption">Growing-season weather anomalies through June 29 · HDD = heat unit deviation vs 5-yr avg (red = above) · Precip deviation (brown = dry) · Source: PRISM Climate Group · AE4cast</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ── EXPORTS ─────────────────────────────────────────────── -->
+  <div class="section" style="margin-top:48px;">
+    <span class="section-label">June in Review</span>
+    <h2>Exports: A Tale of Two Commodities</h2>
+    <p>Corn exports delivered a standout June. Accumulated shipments through the week ending June 18 ran <strong>+24% ahead of last year</strong> at the same point in the marketing year. Mexico anchored demand as both the top weekly and year-to-date buyer, with consistent weekly volumes supporting strong physical movement.</p>
+    <p>Soybean exports told the opposite story. Cumulative shipments ran <strong>−19% behind year-ago</strong>, reflecting the continued headwind from reduced Chinese buying. Egypt appeared as a notable weekly buyer, but year-to-date soy export volume to China has declined meaningfully. New-crop booking activity has been slow, keeping the soybean balance sheet under pressure.</p>
+
+    <div class="callout">
+      <div class="kf-label">📌 Key Figure 3: Export Pace Divergence</div>
+      <p><strong>Corn accumulated exports: +24% YoY · Soybean accumulated exports: −19% YoY.</strong> The divergence reflects fundamentally different demand structures entering the 2026/27 marketing year — and sets up very different price risk profiles heading into summer.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ── AE4CAST YIELD SIGNAL ─────────────────────────────────── -->
+  <div class="section" style="margin-top:48px;">
+    <span class="section-label">AE4cast Signal</span>
+    <h2>Yield Signal — Directional View</h2>
+    <p>As of June 30, AE4cast daily yield models show both corn and soybean yield trajectories trending <strong>above the 5-year historical average</strong> at the national level. Core Corn Belt states are driving the above-trend reading for corn, while regional variation is significant — pockets of the Southeast and Northern Plains show below-trend signals.</p>
+    <p>However, the late-June weather deterioration has begun introducing meaningful downside uncertainty. Yield signals are directionally positive entering July, but they are not locked in — the next 3–4 weeks of weather will be decisive.</p>
+    <p style="font-size:0.83rem; color:var(--muted); font-style:italic;">Absolute yield estimates are proprietary and available by subscription. AE4cast publishes directional inference only in public reports.</p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ── JULY OUTLOOK ─────────────────────────────────────────── -->
+  <div class="section" style="margin-top:48px;">
+    <div class="outlook-header">
+      <span class="section-label">July Outlook</span>
+      <h2>What to Watch in July</h2>
+      <p>The 2026 crop is at a critical juncture. The next four weeks will largely determine whether above-trend yield signals hold or give way to a tighter supply outlook — and prices reflect it.</p>
+    </div>
+
+    <div class="watch-grid">
+      <div class="watch-card">
+        <div class="icon">🌽</div>
+        <h4>Corn — Pollination is the Market</h4>
+        <p>Peak pollination next 2–3 weeks. Watch for any single-week G+E drop below 65% — historically a bullish price inflection point for corn futures, signaling meaningful yield loss risk. Expect elevated volatility around every Monday NASS report.</p>
+      </div>
+      <div class="watch-card">
+        <div class="icon">🌱</div>
+        <h4>Soybeans — Pod Set Approaching</h4>
+        <p>Still a more forgiving stage than corn, but moisture deficit matters more as August nears. The bigger near-term driver may be demand: any significant Chinese new-crop purchase announcement would be a sharp price catalyst.</p>
+      </div>
+      <div class="watch-card">
+        <div class="icon">📦</div>
+        <h4>Exports — China is the Wildcard</h4>
+        <p>Corn's pace is sustainable. For soybeans, USDA's balance sheet assumes Chinese buying that hasn't materialized. Watch weekly ESR sales (Thursdays) for any sign of re-engagement.</p>
+      </div>
+      <div class="watch-card">
+        <div class="icon">🌧️</div>
+        <h4>Weather — 6–10 Day Forecasts</h4>
+        <p>The Corn Belt 6–10 and 8–14 day precipitation outlooks will drive price action this month. Any forecast shift toward widespread rains would relieve pressure; continued dryness amplifies the bullish setup.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:36px; font-size:1.1rem;">Key Calendar Events — July 2026</h2>
+    <table class="cal-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Event</th>
+          <th>What to Watch</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="cal-date">June 30 (today)</td>
+          <td><span class="cal-badge badge-usda">USDA</span><br>NASS Acreage Report</td>
+          <td>Corn 95.3M acres (flat vs. March); soybeans 85.4M acres (+665K — mildly bearish for soy balance sheet)</td>
+        </tr>
+        <tr>
+          <td class="cal-date">Every Monday</td>
+          <td><span class="cal-badge badge-weekly">Weekly</span><br>NASS Crop Progress &amp; Condition</td>
+          <td>G+E ratings during pollination — most closely watched data in the grain market this month</td>
+        </tr>
+        <tr>
+          <td class="cal-date">Every Thursday</td>
+          <td><span class="cal-badge badge-weekly">Weekly</span><br>USDA ESR Export Sales</td>
+          <td>New-crop soybean bookings to China; corn pace sustainability</td>
+        </tr>
+        <tr>
+          <td class="cal-date">July 11</td>
+          <td><span class="cal-badge badge-usda">USDA</span><br>WASDE + Crop Production</td>
+          <td>First survey-based yield estimates — will set the price tone for the rest of the month</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── ACREAGE UPDATE ──────────────────────────────────────── -->
+  <div class="section">
+    <span class="section-label">Data Update</span>
+    <h2>NASS Acreage Report — June 30</h2>
+    <p>The USDA NASS June Acreage Report (released today, June 30) confirmed corn planted area at <strong>95.3 million acres</strong> — essentially unchanged from the March Prospective Plantings. Soybean planted area was revised up to <strong>85.4 million acres</strong> (+665,000 acres vs. March intentions). The soybean acreage beat is a modest headwind for new-crop prices on an already-pressured balance sheet.</p>
+  </div>
+
+  <!-- ── CTA ─────────────────────────────────────────────────── -->
+  <div class="cta-block">
+    <h3>Daily Yield Estimates — Available by Subscription</h3>
+    <p>AE4cast publishes directional inference publicly. For absolute daily yield estimates, state-level breakdowns, and in-season analytics updated every morning — contact us for access.</p>
+    <a href="contact.html">Request Access →</a>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <span class="footer-logo">AE4<span>cast</span></span>
+  <ul class="footer-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="blog.html">Blog</a></li>
+    <li><a href="signals.html">Signals</a></li>
+    <li><a href="privacy-policy.html">Privacy Policy</a></li>
+    <li><a href="terms.html">Terms of Service</a></li>
+  </ul>
+  <span class="footer-copy">© 2026 AE4cast. All rights reserved.</span>
+</footer>
+
+<script>
+function toggleMobileNav() {
+  const links = document.querySelector('.nav-links');
+  const btn   = document.getElementById('nav-hamburger');
+  links.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.nav-links a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      document.querySelector('.nav-links').classList.remove('open');
+      document.getElementById('nav-hamburger').classList.remove('open');
+    });
+  });
+});
+</script>
+</body>
+</html>
