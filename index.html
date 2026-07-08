@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AE4cast — Daily Global Crop Intelligence</title>
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -741,6 +743,10 @@
   .modal-success h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; }
   .modal-success p { font-size: 0.88rem; color: var(--muted); }
   .modal-form-wrap.hidden { display: none; }
+  .modal-booking { display: none; }
+  .modal-booking.active { display: block; }
+  .modal-message-step { display: none; }
+  .modal-message-step.active { display: block; }
 
   /* ── HAMBURGER BUTTON ───────────────────────────────────── */
   .nav-hamburger {
@@ -1078,13 +1084,46 @@
       Questions in the meantime? <a href="mailto:info@ae4cast.com" style="color:#f97316">info@ae4cast.com</a></p>
     </div>
 
+    <!-- Error state -->
+    <div class="modal-success" id="modal-error">
+      <div class="check">⚠️</div>
+      <h3>Something went wrong</h3>
+      <p>Your message couldn't be sent. Please email us directly at<br>
+      <a href="mailto:info@ae4cast.com" style="color:#f97316">info@ae4cast.com</a></p>
+    </div>
+
+    <!-- Message step (shown after "Just send a message") -->
+    <div class="modal-message-step" id="modal-message-step">
+      <div class="modal-eyebrow">Step 2 of 2 — Your Message</div>
+      <h2>What's on your mind?</h2>
+      <p class="modal-sub" style="margin-bottom:20px">We'll reply within one business day.</p>
+      <div class="form-field">
+        <textarea id="f-message" name="message" rows="5" placeholder="Tell us what you're working on, what data you need, or any questions you have…" style="min-height:120px;"></textarea>
+      </div>
+      <button type="button" class="modal-submit" id="msg-send-btn" style="margin-top:16px" onclick="sendMessage()">Send Message →</button>
+      <p style="text-align:center;margin-top:12px">
+        <a href="#" onclick="backToForm();return false;" style="font-size:0.82rem;color:#64748b;text-decoration:underline;text-underline-offset:3px;">← Back</a>
+      </p>
+    </div>
+
+    <!-- Booking step (shown after form submit → book demo path) -->
+    <div class="modal-booking" id="modal-booking">
+      <div class="modal-eyebrow">Step 2 of 2 — Pick a Time</div>
+      <h2>Book Your Demo</h2>
+      <p class="modal-sub" style="margin-bottom:16px">Choose a 30-minute slot and you'll get a Zoom confirmation instantly.</p>
+      <div id="calendly-embed" style="min-width:280px;height:520px;"></div>
+      <p style="font-size:0.75rem;color:rgba(255,255,255,0.3);margin-top:12px;text-align:center">
+        Can't find a time? Email us at <a href="mailto:info@ae4cast.com" style="color:#f97316">info@ae4cast.com</a>
+      </p>
+    </div>
+
     <!-- Form -->
     <div class="modal-form-wrap" id="modal-form-wrap">
       <div class="modal-eyebrow">Request a Demo</div>
       <h2>See AE4cast in Action</h2>
-      <p class="modal-sub">We'll set up a call to walk through the platform and tailor coverage to your workflow.</p>
+      <p class="modal-sub">Fill in your details — then pick a time or send us a message.</p>
 
-      <form id="demo-form" name="demo-request" method="POST" data-netlify="true" onsubmit="handleSubmit(event)">
+      <form id="demo-form" name="demo-request" method="POST" data-netlify="true" onsubmit="return false;">
         <input type="hidden" name="form-name" value="demo-request">
         <div class="form-row">
           <div class="form-field">
@@ -1126,7 +1165,12 @@
           <input type="text" id="f-providers" name="current_providers" placeholder="e.g. Bloomberg, USDA WASDE, Gro Intelligence…">
         </div>
 
-        <button type="submit" class="modal-submit">Request Demo →</button>
+        <button type="button" class="modal-submit" onclick="handleBookDemo()">Book a Demo →</button>
+        <p style="text-align:center;margin-top:14px">
+          <a href="#" onclick="handleMessageOnly();return false;" style="font-size:0.82rem;color:#64748b;text-decoration:underline;text-underline-offset:3px;">
+            Just send a message — we'll follow up to schedule
+          </a>
+        </p>
         <p class="modal-legal">Your information is used only to follow up on this demo request and for internal market research. We do not sell or share your data with third parties.</p>
       </form>
     </div>
@@ -1141,6 +1185,15 @@
   function closeModal() {
     document.getElementById('demo-modal').classList.remove('active');
     document.body.style.overflow = '';
+    // Reset all modal states for next open
+    document.getElementById('modal-form-wrap').classList.remove('hidden');
+    document.getElementById('modal-success').classList.remove('active');
+    document.getElementById('modal-error').classList.remove('active');
+    document.getElementById('modal-booking').classList.remove('active');
+    document.getElementById('modal-message-step').classList.remove('active');
+    document.getElementById('calendly-embed').innerHTML = '';
+    document.getElementById('f-message').value = '';
+    document.getElementById('demo-form').reset();
   }
   function handleOverlayClick(e) {
     if (e.target === document.getElementById('demo-modal')) closeModal();
@@ -1162,22 +1215,85 @@
         document.getElementById('nav-hamburger').classList.remove('open');
       });
     });
+    if (window.location.hash === '#open-demo') {
+      openModal();
+      history.replaceState(null, '', window.location.pathname);
+    }
   });
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    const form = e.target;
-    if (!form.checkValidity()) { form.reportValidity(); return; }
+  async function submitToNetlify(message) {
+    const form = document.getElementById('demo-form');
+    const params = new URLSearchParams(new FormData(form));
+    if (message) params.set('message', message);
+    const resp = await fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
+    });
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+  }
+
+  function validateForm() {
+    const form = document.getElementById('demo-form');
+    if (!form.checkValidity()) { form.reportValidity(); return false; }
+    return true;
+  }
+
+  async function handleBookDemo() {
+    if (!validateForm()) return;
     try {
-      await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(new FormData(form)).toString()
+      await submitToNetlify();
+    } catch (e) {
+      console.warn('Netlify submission failed:', e);
+    }
+    const name  = document.getElementById('f-name').value.trim();
+    const email = document.getElementById('f-email').value.trim();
+    document.getElementById('modal-form-wrap').classList.add('hidden');
+    const booking = document.getElementById('modal-booking');
+    booking.classList.add('active');
+    // Build Calendly URL with name + email as query params (more reliable than prefill object)
+    const calendlyUrl = 'https://calendly.com/sisi-ae4cast/30min' +
+      '?name=' + encodeURIComponent(name) +
+      '&email=' + encodeURIComponent(email);
+    if (window.Calendly) {
+      Calendly.initInlineWidget({
+        url: calendlyUrl,
+        parentElement: document.getElementById('calendly-embed'),
       });
-      document.getElementById('modal-form-wrap').classList.add('hidden');
+    } else {
+      // Fallback if Calendly script hasn't loaded yet
+      document.getElementById('calendly-embed').innerHTML =
+        '<iframe src="' + calendlyUrl + '" width="100%" height="520" frameborder="0"></iframe>';
+    }
+  }
+
+  function handleMessageOnly() {
+    if (!validateForm()) return;
+    document.getElementById('modal-form-wrap').classList.add('hidden');
+    document.getElementById('modal-message-step').classList.add('active');
+    document.getElementById('f-message').focus();
+  }
+
+  function backToForm() {
+    document.getElementById('modal-message-step').classList.remove('active');
+    document.getElementById('modal-form-wrap').classList.remove('hidden');
+  }
+
+  async function sendMessage() {
+    const message = document.getElementById('f-message').value.trim();
+    const btn = document.getElementById('msg-send-btn');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    try {
+      await submitToNetlify(message);
+      document.getElementById('modal-message-step').classList.remove('active');
       document.getElementById('modal-success').classList.add('active');
-    } catch {
-      alert('Something went wrong. Please email us at info@ae4cast.com');
+    } catch (e) {
+      document.getElementById('modal-message-step').classList.remove('active');
+      document.getElementById('modal-error').classList.add('active');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Send Message →';
     }
   }
 </script>

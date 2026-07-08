@@ -73,7 +73,7 @@
 
   /* ── HERO ───────────────────────────────────────────────────── */
   .report-hero {
-    background: linear-gradient(160deg, rgba(10,15,30,0.92) 0%, rgba(13,20,42,0.85) 60%, rgba(10,15,30,0.92) 100%),
+    background: linear-gradient(160deg, rgba(13,20,36,0.75) 0%, rgba(10,15,30,0.65) 40%, rgba(12,21,32,0.75) 100%),
                 url('image/ae4casthomepage1.png') center / cover no-repeat;
     padding: clamp(48px, 7vw, 90px) clamp(24px, 6vw, 80px) clamp(40px, 5vw, 64px);
     color: #fff;
@@ -107,24 +107,21 @@
   .pill-soy  { background: rgba(34,197,94,0.14);  color: #86efac; border: 1px solid rgba(34,197,94,0.25); }
 
   /* ── KEY FIGURES BAR ───────────────────────────────────────── */
-  .key-figures {
-    background: var(--dark2);
-    border-bottom: 1px solid var(--dark3);
-  }
   .key-figures-inner {
-    max-width: 780px; margin: 0 auto;
-    padding: 28px clamp(24px, 6vw, 80px);
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
-    background: var(--dark3);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
   }
   .kf-item {
-    background: var(--dark2); padding: 20px 24px;
+    background: rgba(10,15,30,0.45); padding: 20px 24px;
     display: flex; flex-direction: column; gap: 4px;
   }
   .kf-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
   .kf-value { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.03em; color: var(--orange); line-height: 1; }
   .kf-desc  { font-size: 0.78rem; color: rgba(255,255,255,0.5); line-height: 1.4; margin-top: 2px; }
-  @media (max-width: 640px) {
+  @media (max-width: 600px) {
     .key-figures-inner { grid-template-columns: 1fr; }
   }
 
@@ -265,7 +262,7 @@
     <li><a href="signals.html" class="active">Signals</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
-  <a href="contact.html" class="nav-cta">Request Demo</a>
+  <a href="index.html#open-demo" class="nav-cta">Request Demo</a>
   <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" onclick="toggleMobileNav()">
     <span></span><span></span><span></span>
   </button>
@@ -292,26 +289,23 @@
       <span class="hero-pill pill-corn">Corn</span>
       <span class="hero-pill pill-soy">Soybeans</span>
     </div>
-  </div>
-</div>
-
-<!-- KEY FIGURES -->
-<div class="key-figures">
-  <div class="key-figures-inner">
-    <div class="kf-item">
-      <span class="kf-label">Precip Deficit</span>
-      <span class="kf-value">−47.8%</span>
-      <span class="kf-desc">Corn Belt cumulative vs 5-yr avg through June 29</span>
-    </div>
-    <div class="kf-item">
-      <span class="kf-label">Corn G+E (Jun 28)</span>
-      <span class="kf-value">67%</span>
-      <span class="kf-desc">Down 6–7 pts vs 73–74% at same point in 2025</span>
-    </div>
-    <div class="kf-item">
-      <span class="kf-label">Export Pace YoY</span>
-      <span class="kf-value">+28% / −19%</span>
-      <span class="kf-desc">Corn ahead · Soybeans behind vs prior year</span>
+    <!-- KEY FIGURES (inside hero so background image covers it) -->
+    <div class="key-figures-inner" style="margin-top:32px;padding-left:0;padding-right:0;">
+      <div class="kf-item">
+        <span class="kf-label">Precip Deficit</span>
+        <span class="kf-value">−47.8%</span>
+        <span class="kf-desc">Corn Belt cumulative vs 5-yr avg through June 29</span>
+      </div>
+      <div class="kf-item">
+        <span class="kf-label">Corn G+E (Jun 28)</span>
+        <span class="kf-value">67%</span>
+        <span class="kf-desc">Down 6–7 pts vs 73–74% at same point in 2025</span>
+      </div>
+      <div class="kf-item">
+        <span class="kf-label">Export Pace YoY</span>
+        <span class="kf-value">+28% / −19%</span>
+        <span class="kf-desc">Corn ahead · Soybeans behind vs prior year</span>
+      </div>
     </div>
   </div>
 </div>
