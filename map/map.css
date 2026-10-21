@@ -1,0 +1,68 @@
+/* AE4cast field map — page styles. Site nav rules are copied from the other pages so
+   the page stands alone (no shared stylesheet exists in this site). */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f8fafc; --border: #e2e8f0; --dark: #0f172a; --mid: #334155; --muted: #64748b; --white: #fff;
+  --accent: #f97316;
+  --corn: #ffd300; --soy: #267300; --grey: #cccccc;
+}
+html, body { height: 100%; }
+body { font-family: "Helvetica Neue", Arial, sans-serif; background: var(--bg); color: var(--dark);
+       display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ── SITE NAV ── */
+.site-nav { position: sticky; top: 0; z-index: 100; background: rgba(10, 15, 30, 0.96);
+  backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 0 clamp(16px, 4vw, 60px); display: flex; align-items: center; height: 60px; gap: 32px; }
+.site-nav-logo { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; text-decoration: none; flex-shrink: 0; }
+.site-nav-logo span { color: var(--accent); }
+.site-nav-links { display: flex; gap: 28px; list-style: none; flex: 1; }
+.site-nav-links a { font-size: 0.85rem; font-weight: 500; color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.15s; }
+.site-nav-links a:hover, .site-nav-links a.active { color: #fff; }
+.site-nav-cta { background: var(--accent); color: #fff; font-size: 0.82rem; font-weight: 700; padding: 8px 18px; border-radius: 6px; text-decoration: none; flex-shrink: 0; }
+@media (max-width: 640px) { .site-nav-links { display: none; } }
+
+/* ── TOOLBAR ── */
+.toolbar { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center;
+  padding: 10px 16px; background: var(--white); border-bottom: 1px solid var(--border); font-size: 0.85rem; color: var(--mid); }
+.toolbar label { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.toolbar select { font: inherit; padding: 4px 6px; border: 1px solid var(--border); border-radius: 4px; background: #fff; max-width: 60vw; }
+.status { color: var(--muted); font-size: 0.8rem; }
+
+/* ── MAP ── */
+#map { flex: 1 1 auto; min-height: 60vh; width: 100%; }
+.banner { background: #fee2e2; color: #991b1b; padding: 10px 16px; font-size: 0.9rem; border-bottom: 1px solid #fecaca; word-break: break-word; }
+.banner[hidden] { display: none; }
+
+/* ── LEGEND ── */
+.legend { position: absolute; right: 16px; bottom: 96px; background: rgba(255,255,255,0.95); border: 1px solid var(--border);
+  border-radius: 6px; padding: 10px 12px; font-size: 0.78rem; color: var(--mid); max-width: 240px; z-index: 5; }
+.legend-title { font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+.legend-row { display: flex; align-items: center; gap: 8px; margin: 2px 0; }
+.sw { display: inline-block; width: 16px; height: 12px; border: 1px solid rgba(0,0,0,0.25); flex-shrink: 0; }
+.sw-corn { background: var(--corn); }
+.sw-corn-silage { background: repeating-linear-gradient(45deg, var(--corn) 0 3px, #7a6400 3px 5px); }
+.sw-corn-nh { background: var(--corn); opacity: 0.4; }
+.sw-soy { background: var(--soy); }
+.sw-soy-nh { background: var(--soy); opacity: 0.4; }
+.sw-grey { background: var(--grey); }
+.legend-ramp { display: flex; gap: 2px; align-items: center; margin: 4px 0; }
+.legend-ramp span { display: inline-block; height: 12px; flex: 1; }
+.legend-ramp-labels { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--muted); }
+
+/* ── NOTE ── */
+.note { padding: 10px 16px; font-size: 0.78rem; color: var(--muted); background: var(--white); border-top: 1px solid var(--border); line-height: 1.5; }
+.proto { display: block; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.7rem; color: #94a3b8; margin-top: 4px; word-break: break-word; }
+
+/* ── POPUPS ── */
+.maplibregl-popup-content { font: 0.8rem/1.45 "Helvetica Neue", Arial, sans-serif; color: var(--dark); max-width: 300px; padding: 10px 12px; }
+.maplibregl-popup-content h4 { font-size: 0.9rem; margin-bottom: 4px; }
+.maplibregl-popup-content table { border-collapse: collapse; width: 100%; }
+.maplibregl-popup-content td { padding: 1px 4px 1px 0; vertical-align: top; }
+.maplibregl-popup-content td.v { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.maplibregl-popup-content .small { color: var(--muted); font-size: 0.72rem; margin-top: 6px; }
+
+@media (max-width: 640px) {
+  .legend { right: 8px; bottom: 80px; max-width: 46vw; font-size: 0.72rem; }
+  .toolbar { padding: 8px 16px; }
+}
