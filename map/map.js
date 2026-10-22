@@ -9,6 +9,8 @@
   var FIELD_ZOOM = 9;                  // fields visible from this zoom; counties below it
   var PREDICTION_SENTENCE = "Field crop and field yield are model predictions on the latest public field boundaries";
   var COLORS = { corn: "#ffd300", soy: "#267300", grey: "#cccccc" };
+  var COUNTY_NAMES_URL = "counties.json";    // fips -> "Name, ST" (Census cartographic county boundaries); same directory as the page
+  var STATES_URL = "states.geojson";         // Census 20 m state boundaries, drawn on top of the basemap
   var RAMP = ["#eff6ff", "#bfdbfe", "#60a5fa", "#2563eb", "#1e3a8a"];   // county choropleth, low to high
 
   // ?manifest= is for local tests only: a same-origin relative path (no scheme, no leading //).
@@ -47,10 +49,10 @@
     style: {
       version: 8,
       sources: {
-        basemap: {
+        basemap: {   // CARTO Voyager: a standard street map with place names and administrative borders
           type: "raster", tileSize: 256,
-          tiles: ["https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png"],
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          tiles: ["https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png"],
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a> · state and county boundaries: US Census Bureau'
         }
       },
       layers: [{ id: "basemap", type: "raster", source: "basemap" }]
@@ -61,6 +63,21 @@
   map.addControl(new maplibregl.ScaleControl({ unit: "imperial" }));
 
   var manifest = null, current = null;   // current = the selected snapshot entry
+  var countyNames = {};                  // fips (string, no leading zeros) -> "Name, ST"; empty until counties.json loads
+  fetch(COUNTY_NAMES_URL, { cache: "no-cache" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    if (d && d.names) countyNames = d.names;
+  }).catch(function () { /* popups fall back to the FIPS code */ });
+  function countyLabel(fips) {
+    var k = String(Number(fips));   // tiles carry fips as a number (19153); counties.json keys are the same digits
+    return countyNames[k] ? countyNames[k] + " (FIPS " + k + ")" : "County " + k;
+  }
+  // state borders on top of the basemap and the county fill; the source is added once the style is ready
+  function addStateBorders() {
+    if (map.getSource("states")) return;
+    map.addSource("states", { type: "geojson", data: STATES_URL });
+    map.addLayer({ id: "state-line", type: "line", source: "states",
+      paint: { "line-color": "#1f2937", "line-width": ["interpolate", ["linear"], ["zoom"], 3, 0.8, 8, 2.0, 12, 2.5], "line-opacity": 0.9 } });
+  }
 
   // ---- manifest and selectors -----------------------------------------------
   fetch(manifestUrl, { cache: "no-cache" }).then(function (r) {
@@ -100,11 +117,12 @@
   }
 
   // ---- layers ----------------------------------------------------------------
-  var LAYERS = ["county-fill", "county-line", "field-fill", "field-silage", "field-line"];
+  var LAYERS = ["county-fill", "county-pick", "county-line", "field-fill", "field-silage", "field-line"];
   function removeLayers() {
     LAYERS.forEach(function (id) { if (map.getLayer(id)) map.removeLayer(id); });
     ["counties", "fields"].forEach(function (id) { if (map.getSource(id)) map.removeSource(id); });
   }
+  var BELOW = "state-line";   // snapshot layers are inserted under the state borders so the borders stay on top
 
   function metricExpr(metric) {
     // null (no forecast / zero grain) -> grey; otherwise a 5-step ramp between the 5th and 95th percentile proxies
@@ -117,21 +135,25 @@
 
   function addLayers(entry) {
     removeLayers();
+    addStateBorders();
     map.addSource("counties", { type: "vector", url: "pmtiles://" + entry.counties_url, minzoom: 3, maxzoom: 9 });
     map.addSource("fields", { type: "vector", url: "pmtiles://" + entry.fields_url, minzoom: 9, maxzoom: 14 });
     var metric = el("metric").value;
     map.addLayer({ id: "county-fill", type: "fill", source: "counties", "source-layer": "counties", maxzoom: FIELD_ZOOM,
-      paint: { "fill-color": metricExpr(metric), "fill-opacity": 0.75 } });
+      paint: { "fill-color": metricExpr(metric), "fill-opacity": 0.7 } }, BELOW);
+    // invisible county polygons at every zoom (the z9 tiles overzoom): lets a field click find its county
+    map.addLayer({ id: "county-pick", type: "fill", source: "counties", "source-layer": "counties",
+      paint: { "fill-color": "#000000", "fill-opacity": 0 } }, BELOW);
     map.addLayer({ id: "county-line", type: "line", source: "counties", "source-layer": "counties",
-      paint: { "line-color": "#64748b", "line-width": ["interpolate", ["linear"], ["zoom"], 3, 0.2, 9, 1.2] } });
+      paint: { "line-color": "#64748b", "line-width": ["interpolate", ["linear"], ["zoom"], 3, 0.2, 9, 1.2] } }, BELOW);
     var cropColor = ["match", ["get", "crop"], "corn", COLORS.corn, "soy", COLORS.soy, COLORS.grey];
     var useOpacity = ["match", ["get", "use"], "not_harvested", 0.4, "soy_not_harvested", 0.4, 0.85];
     map.addLayer({ id: "field-fill", type: "fill", source: "fields", "source-layer": "fields", minzoom: FIELD_ZOOM,
-      paint: { "fill-color": cropColor, "fill-opacity": useOpacity } });
+      paint: { "fill-color": cropColor, "fill-opacity": useOpacity } }, BELOW);
     map.addLayer({ id: "field-silage", type: "fill", source: "fields", "source-layer": "fields", minzoom: FIELD_ZOOM,
-      filter: ["==", ["get", "use"], "silage"], paint: { "fill-pattern": "hatch", "fill-opacity": 0.9 } });
+      filter: ["==", ["get", "use"], "silage"], paint: { "fill-pattern": "hatch", "fill-opacity": 0.9 } }, BELOW);
     map.addLayer({ id: "field-line", type: "line", source: "fields", "source-layer": "fields", minzoom: 11,
-      paint: { "line-color": "#334155", "line-width": 0.4, "line-opacity": 0.6 } });
+      paint: { "line-color": "#334155", "line-width": 0.4, "line-opacity": 0.6 } }, BELOW);
     drawRamp(metric);
   }
 
@@ -181,7 +203,7 @@
     var cornNH = (p.corn_planted != null && p.corn_grain != null && p.corn_silage != null) ? p.corn_planted - p.corn_grain - p.corn_silage : null;
     var soyNH = (p.soy_planted != null && p.soy_harvested != null) ? p.soy_planted - p.soy_harvested : null;
     var noFc = p.status === "no_forecast";
-    var h = "<h4>County " + esc(p.fips) + (noFc ? " · no forecast" : "") + "</h4>";
+    var h = "<h4>" + esc(countyLabel(p.fips)) + (noFc ? " · no forecast" : "") + "</h4>";
     if (noFc) return h + "<div class='small'>No AF1 area forecast for this county on " + esc(p.asof || "") + ".<br>" + labels(p) + "</div>";
     h += "<table>" +
       row("Corn planted", fmtAc(p.corn_planted) + " ac") + row("Corn grain harvested", fmtAc(p.corn_grain) + " ac") +
@@ -201,14 +223,14 @@
       "<br>" + esc(PREDICTION_SENTENCE) + " (CSB " + esc(current ? current.csb_vintage : "") + ").</div>";
     return h;
   }
-  function fieldPopup(p) {
+  function fieldPopup(p, county) {   // county = the county-pick feature under the click (null when none)
     var crop = p.crop === "corn" ? "Corn" : p.crop === "soy" ? "Soybeans" : "Other";
     var use = String(p.use || "").replace(/_/g, " ");
     var unit = p.use === "silage" ? " bu/ac (grain equivalent)" : " bu/ac";
     var h = "<h4>" + esc(crop + (use ? " · " + use : "")) + "</h4><table>" +
       row("Predicted yield", (p.yield == null ? "n/a" : fmt(p.yield) + unit)) +
       row("Chance corn / soy", fmt(p.p_corn, 2) + " / " + fmt(p.p_soy, 2)) +
-      row("Last year's crop", p.last_crop || "n/a") + row("Field id", p.field_id) + "</table>" +
+      row("Last year's crop", p.last_crop || "n/a") + row("County", county ? countyLabel(county.properties.fips) : "n/a") + row("Field id", p.field_id) + "</table>" +
       "<div class='small'>" + esc(PREDICTION_SENTENCE) + " (CSB " + esc(current ? current.csb_vintage : "") + ").<br>" + labels(p) + "</div>";
     return h;
   }
@@ -217,7 +239,8 @@
     new maplibregl.Popup({ maxWidth: "320px" }).setLngLat(e.lngLat).setHTML(countyPopup(e.features[0].properties)).addTo(map);
   });
   map.on("click", "field-fill", function (e) {
-    new maplibregl.Popup({ maxWidth: "320px" }).setLngLat(e.lngLat).setHTML(fieldPopup(e.features[0].properties)).addTo(map);
+    var picked = map.getLayer("county-pick") ? map.queryRenderedFeatures(e.point, { layers: ["county-pick"] }) : [];
+    new maplibregl.Popup({ maxWidth: "320px" }).setLngLat(e.lngLat).setHTML(fieldPopup(e.features[0].properties, picked.length ? picked[0] : null)).addTo(map);
   });
   ["county-fill", "field-fill"].forEach(function (id) {
     map.on("mouseenter", id, function () { map.getCanvas().style.cursor = "pointer"; });

@@ -72,3 +72,13 @@ Set `MANIFEST_URL` in `map.js` to the public manifest URL, add the "Field Map" l
 the site navigation (done on this page; the other pages' nav lists get the same link),
 open a pull request on branch `map-fields`; Netlify's deploy preview is the acceptance
 surface. The tiles are never hosted on Netlify.
+
+## Static data files beside the page
+
+- `counties.json` — FIPS code -> "Name, ST" for all 3,235 US counties, from the Census cartographic
+  county boundaries the snapshot builder draws counties from (cb_2024_us_county_500k). Popups show
+  the name with the FIPS code; a missing entry falls back to the code.
+- `states.geojson` — Census cb_2023_us_state_20m state boundaries (50 states + DC), drawn as the
+  `state-line` layer above the county fill and the fields.
+Both are regenerated from the YieldForecastUSA repo (scratch script make_page_assets.py; the county
+file under map/geo/, the state file from www2.census.gov/geo/tiger/GENZ2023/shp/).
