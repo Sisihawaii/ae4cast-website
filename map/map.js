@@ -46,19 +46,19 @@
 
   var map = new maplibregl.Map({
     container: "map",
-    style: {
-      version: 8,
-      sources: {
-        basemap: {   // CARTO Voyager: a standard street map with place names and administrative borders
-          type: "raster", tileSize: 256,
-          tiles: ["https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png"],
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a> · state and county boundaries: US Census Bureau'
-        }
-      },
-      layers: [{ id: "basemap", type: "raster", source: "basemap" }]
-    },
-    center: [-93.5, 41.5], zoom: 5, minZoom: 3, maxZoom: 16, attributionControl: true
+    // Basemap: OpenFreeMap Positron (vector tiles, OpenStreetMap data, no API key; attribution comes with the
+    // style). CARTO's free raster basemaps began returning an "API KEY REQUIRED" placeholder tile for this site
+    // on 2026-10-29. Place labels are kept above the forecast layers (see labelsBefore()).
+    style: "https://tiles.openfreemap.org/styles/positron",
+    center: [-93.5, 41.5], zoom: 5, minZoom: 3, maxZoom: 16,
+    attributionControl: { customAttribution: "state and county boundaries: US Census Bureau" }
   });
+  // the first label layer of the basemap style: our layers go beneath it so town and road names stay readable
+  function labelsBefore() {
+    var layers = (map.getStyle() && map.getStyle().layers) || [];
+    for (var i = 0; i < layers.length; i++) if (layers[i].type === "symbol") return layers[i].id;
+    return undefined;
+  }
   map.addControl(new maplibregl.NavigationControl(), "top-left");
   map.addControl(new maplibregl.ScaleControl({ unit: "imperial" }));
 
@@ -76,7 +76,8 @@
     if (map.getSource("states")) return;
     map.addSource("states", { type: "geojson", data: STATES_URL });
     map.addLayer({ id: "state-line", type: "line", source: "states",
-      paint: { "line-color": "#1f2937", "line-width": ["interpolate", ["linear"], ["zoom"], 3, 0.8, 8, 2.0, 12, 2.5], "line-opacity": 0.9 } });
+      paint: { "line-color": "#1f2937", "line-width": ["interpolate", ["linear"], ["zoom"], 3, 0.8, 8, 2.0, 12, 2.5], "line-opacity": 0.9 } },
+      labelsBefore());
   }
 
   // ---- manifest and selectors -----------------------------------------------
