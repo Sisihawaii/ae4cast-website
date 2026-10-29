@@ -1,0 +1,50 @@
+{
+ "generated": "2026-10-21T08:31:00Z",
+ "public_base": "test/fixture",
+ "seasons": [
+  {
+   "year": 2026,
+   "snapshots": [
+    {
+     "date": "2026-10-20",
+     "year": 2026,
+     "yield_line": "yf1",
+     "protocol": "live-yf1 / live-af1; yield basis = all-acres (NASS state yield target; all-county p_area ours)",
+     "basis": "all-acres (NASS state yield target; all-county p_area ours); area all-acres AF1 headline",
+     "csb_vintage": "NationalCSB_2018-2025_rev23",
+     "weather_through": "2026-10-16",
+     "stage_area": "m2",
+     "stage_yield": "sep",
+     "replay": false,
+     "counties_url": "test/fixture/counties_2026-10-20.pmtiles",
+     "fields_url": "test/fixture/fields_2026-10-20.pmtiles",
+     "meta_url": "test/fixture/tiles.json",
+     "sizes_bytes": {"counties": 8608, "fields": 3023961},
+     "n_counties": 1,
+     "n_fields": 5447,
+     "n_fields_dropped": 78,
+     "tiles_ok": true,
+     "published_at": "2026-10-21T08:31:00Z",
+     "commit": "fixture"
+    },
+    {
+     "date": "2026-10-13",
+     "year": 2026,
+     "yield_line": "yf1",
+     "protocol": "fixture: unavailable snapshot (tiles never uploaded)",
+     "basis": "fixture",
+     "csb_vintage": "NationalCSB_2018-2025_rev23",
+     "weather_through": "2026-10-09",
+     "counties_url": "test/fixture/missing.pmtiles",
+     "fields_url": "test/fixture/missing.pmtiles",
+     "sizes_bytes": {"counties": 0, "fields": 0},
+     "n_counties": 0, "n_fields": 0, "n_fields_dropped": 0,
+     "tiles_ok": false,
+     "published_at": null,
+     "commit": "fixture"
+    }
+   ]
+  }
+ ],
+ "archived_seasons": []
+}
