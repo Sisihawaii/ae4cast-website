@@ -6,7 +6,9 @@ when zoomed in (predicted crop, use and yield), with a season and date selector.
 
 Static page, no build step: `index.html`, `map.css`, `map.js`. Libraries are pinned
 from CDNs (MapLibre GL JS 4.7.1 on cdnjs; pmtiles.js 3.2.1 on unpkg). The basemap is
-CARTO Positron raster tiles (OpenStreetMap data, attribution shown on the map).
+OpenFreeMap's Positron vector style (OpenStreetMap data, no API key; attribution shown on the map).
+CARTO's free raster basemaps were used until 2026-10-29, when they began returning an "API KEY
+REQUIRED" placeholder tile for this site.
 
 ## Data
 
