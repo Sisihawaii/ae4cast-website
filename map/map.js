@@ -4,8 +4,8 @@
 (function () {
   "use strict";
 
-  // The published manifest (Cloudflare R2 public base + /manifest.json). Set at deploy time.
-  var MANIFEST_URL = "https://pub-76fe00fa9164485d814d3c20043d4a45.r2.dev/manifest.json";
+  // The published manifest (Cloudflare R2 custom domain tiles.ae4cast.com + /manifest.json). Set at deploy time.
+  var MANIFEST_URL = "https://tiles.ae4cast.com/manifest.json";
   var FIELD_ZOOM = 9;                  // fields visible from this zoom; counties below it
   var PREDICTION_SENTENCE = "Field crop and field yield are model predictions on the latest public field boundaries";
   var COLORS = { corn: "#ffd300", soy: "#267300", grey: "#cccccc" };
